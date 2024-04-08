@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Calendrier</title>
+	<title>Tasks</title>
 </svelte:head>
 
-<Content title="Calendrier" />
+<Content title="Product Management" />

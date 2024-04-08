@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Time Manage</title>
+	<title>Projects</title>
 </svelte:head>
 
-<Content title="Time Manage" />
+<Content title="User Management" />

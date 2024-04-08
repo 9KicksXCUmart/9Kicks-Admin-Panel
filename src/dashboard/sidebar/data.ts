@@ -17,49 +17,14 @@ export const data = [
 				link: '/'
 			},
 			{
-				title: 'Projects',
+				title: 'User Management',
 				icon: ProjectsIcon,
-				link: '/admin/projects'
-			}
-		]
-	},
-	{
-		section: 'Section 2',
-		content: [
+				link: '/admin/user'
+			},
 			{
-				title: 'My tasks',
+				title: 'Product Management',
 				icon: TasksIcon,
-				link: '/admin/tasks'
-			},
-			{
-				title: 'Calendar',
-				icon: CalendarIcon,
-				link: '/admin/calendar'
-			},
-			{
-				title: 'Time manage',
-				icon: TimeManageIcon,
-				link: '/admin/time-manage'
-			}
-		]
-	},
-	{
-		section: 'Section 3',
-		content: [
-			{
-				title: 'Reports',
-				icon: ReportsIcon,
-				link: '/admin/reports'
-			},
-			{
-				title: 'Settings',
-				icon: SettingsIcon,
-				link: '/admin/settings'
-			},
-			{
-				title: 'Documentation',
-				icon: DocumentationIcon,
-				link: '/admin/documentation'
+				link: '/admin/product'
 			}
 		]
 	}

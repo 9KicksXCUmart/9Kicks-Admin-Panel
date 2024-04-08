@@ -56,11 +56,11 @@
 			</div>
 			<div class="relative ml-5 flex w-1/4 items-center justify-end p-1 sm:right-auto sm:mr-0">
 				<span class="relative block">
-					<img
-						alt="Guillermo Rauch"
-						src="/images/9.jpg"
-						class="mx-auto h-10 w-10 rounded-full object-cover"
-					/>
+<!--					<img-->
+<!--						alt="Guillermo Rauch"-->
+<!--						src="/images/9.jpg"-->
+<!--						class="mx-auto h-10 w-10 rounded-full object-cover"-->
+<!--					/>-->
 				</span>
 			</div>
 		</div>
