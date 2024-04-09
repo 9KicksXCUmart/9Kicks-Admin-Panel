@@ -1,47 +1,73 @@
 <script lang="ts">
+	export let data;
 	import Modal from './Modal.svelte';
+	import AddModal from './AddModal.svelte';
+	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+	import { PUBLIC_GO_BACKEND_URL } from '$env/static/public';
+	import ViewButton from '../../../components/button/ViewButton.svelte';
+	import EditButton from '../../../components/button/EditButton.svelte';
+	import AddButton from '../../../components/button/AddButton.svelte';
 
-	interface Product {
-		id: number;
-		name: string;
+	let selectedProduct: productDetail | null = null;
+
+	interface productDetail {
+		id: string;
 		brand: string;
+		name: string;
 		category: string;
 		price: number;
+		discountPrice: number;
 		isDiscount: boolean;
+		imageUrl: string;
+		publishDate: string;
+		reviewIdList: Array<string>;
+		buyCount: number;
+		size: object;
+	}
+	let products: productDetail[] = [];
+	let add = false;
+	function addPoductModal() {
+		add = true;
 	}
 
-	let products: Product[] = [
-		{
-			id: 1,
-			name: 'Product A',
-			brand: 'Brand X',
-			category: 'Electronics',
-			price: 99.99,
-			isDiscount: false
-		},
-		{
-			id: 2,
-			name: 'Product B',
-			brand: 'Brand Y',
-			category: 'Clothing',
-			price: 49.99,
-			isDiscount: true
-		}
-		// Add more products here
-	];
-
-	let selectedProduct: Product | null = null;
-
-	function openModal(product: Product) {
+	function openProductModal(product: productDetail) {
 		selectedProduct = { ...product };
 	}
 
-	function updateProduct() {
+	async function getProducts() {
+		const response = await fetch(
+			`${PUBLIC_GO_BACKEND_URL}/v1/products?pageNum=` + $page.url.searchParams.get('pageNum'),
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${data.jwtToken}`
+				}
+			}
+		);
+		const result = await response.json();
+		return result.data.products;
+	}
+	onMount(async () => {
+		products = await getProducts();
+	});
+
+	async function updateProduct() {
 		if (selectedProduct) {
-			const index = products.findIndex((p) => p.id === selectedProduct.id);
+			const index = products.findIndex((p) => p.id === selectedProduct!!.id);
 			if (index !== -1) {
+				console.log(selectedProduct);
 				products[index] = { ...selectedProduct };
 			}
+			const response = await fetch(`${PUBLIC_GO_BACKEND_URL}/v1/products/update-detail`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${data.jwtToken}`
+				},
+				body: JSON.stringify(products[index])
+			});
 		}
 		selectedProduct = null;
 	}
@@ -50,56 +76,59 @@
 <svelte:head>
 	<title>Product Management</title>
 </svelte:head>
-
-<table class="w-full table-auto">
+<div class=" mb-4 py-5 text-center text-3xl font-bold">Product Management</div>
+<AddButton on:click={() => addPoductModal()} />
+<table class="table-auto">
 	<thead>
-		<tr class="bg-gray-200 text-sm uppercase leading-normal text-gray-600">
+		<tr class="bg-gray-200 text-sm leading-normal text-gray-600">
 			<th class="px-6 py-3">Name</th>
 			<th class="px-6 py-3">Brand</th>
 			<th class="px-6 py-3">Category</th>
 			<th class="px-6 py-3">Price</th>
 			<th class="px-6 py-3">Discount</th>
+			<th class="px-6 py-3">Discount Price</th>
+			<th class="px-6 py-3">Size & Stock</th>
+			<th class="px-6 py-3">Publish Date</th>
+			<th class="border px-6 py-3">Preview Image</th>
+			<th class="border px-6 py-3">Review</th>
+			<th class="border px-6 py-3">Edit</th>
 		</tr>
 	</thead>
 	<tbody class="text-sm font-light text-gray-600">
 		{#each products as product}
-			<tr
-				class="cursor-pointer border-b border-gray-200 hover:bg-gray-100"
-				on:click={() => openModal(product)}
-			>
+			<tr class="cursor-pointer border-b border-gray-200 hover:bg-gray-100">
 				<td class="px-6 py-3">{product.name}</td>
 				<td class="px-6 py-3">{product.brand}</td>
 				<td class="px-6 py-3">{product.category}</td>
 				<td class="px-6 py-3">${product.price.toFixed(2)}</td>
 				<td class="px-6 py-3">{product.isDiscount ? 'Yes' : 'No'}</td>
+				<td class="px-6 py-3">{product.discountPrice}</td>
+				<td class="max-w-sm truncate border border-red-500 px-6 py-3">
+					{JSON.stringify(product.size)}
+				</td>
+				<td class="px-6 py-1">{product.publishDate.replace('T00:00:00', '')}</td>
+				<td class=" px-6 py-3">{product.imageUrl}</td>
+				<td class=" px-6 py-3"><ViewButton on:click={() => openProductModal(product)} /></td>
+				<td class=" px-6 py-3"><EditButton on:click={() => openProductModal(product)} /></td>
 			</tr>
 		{/each}
 	</tbody>
 </table>
 
 {#if selectedProduct}
-	<Modal on:close={() => (selectedProduct = null)}>
-		<h2 class="mb-4 text-xl font-bold">Update Product</h2>
-		<div class="mb-4">
-			<label class="mb-2 block font-bold text-gray-700" for="name"> Name </label>
-			<input
-				class="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-				id="name"
-				type="text"
-				bind:value={selectedProduct.name}
-			/>
-		</div>
-		<!-- Add more input fields for other attributes -->
-		<button
-			class="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-			on:click={updateProduct}>Update</button
-		>
-	</Modal>
+	<Modal
+		{selectedProduct}
+		on:close={() => (selectedProduct = null)}
+		on:updateProduct={updateProduct}
+	/>
 {/if}
 
-<!-- <Content title="Product Management" /> -->
+{#if add}
+	<AddModal on:close={() => (selectedProduct = null)} on:updateProduct={updateProduct} />
+{/if}
+
 <!-- <div class="container mx-auto py-4"> -->
-<!-- 	<div class="mb-4 text-3xl font-bold">Product Management</div> -->
+
 <!-- 	<div class="overflow-x-auto rounded-lg bg-white shadow-md"> -->
 <!-- 		<table class="w-full table-auto"> -->
 <!-- 			<thead> -->
@@ -129,7 +158,7 @@
 <!-- 					<td class="px-6 py-3">Yes</td> -->
 <!-- 					<td class="px-6 py-3">$39.99</td> -->
 <!-- 				</tr> -->
-<!-- 				<!-- Add more product rows here -->
+<!-- 				 Add more product rows here -->
 <!-- 			</tbody> -->
 <!-- 		</table> -->
 <!-- 	</div> -->
