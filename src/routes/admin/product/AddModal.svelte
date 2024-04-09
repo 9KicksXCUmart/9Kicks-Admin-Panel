@@ -1,8 +1,7 @@
 <!-- Modal.svelte -->
 <script lang="ts">
-	export let selectedProduct: productDetail;
+	export let createdProduct = {} as productDetail;
 	interface productDetail {
-		id: string;
 		brand: string;
 		name: string;
 		category: string;
@@ -24,14 +23,16 @@
 	}
 
 	function product() {
-		selectedProduct.size = JSON.parse(stockSize);
 		dispatch('product');
 	}
 
 	function onChange(event: any) {
-		selectedProduct.isDiscount = event.currentTarget.value === 'true';
+		createdProduct.isDiscount = event.currentTarget.value === 'true';
 	}
-	let stockSize = JSON.stringify(selectedProduct.size).toString();
+	let stockSize: Record<string, number> = {};
+	for (let i = 5.5; i <= 14; i += 0.5) {
+		stockSize[i.toString()] = 0;
+	}
 </script>
 
 <div class="bg-rgba(255,104,49,0.6) fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
@@ -48,18 +49,8 @@
 				</svg>
 			</button>
 		</div>
-		<h2 class="mb-4 text-center font-bold">Update Product</h2>
+		<h2 class="mb-4 text-center font-bold">Create Product</h2>
 		<div class="grid grid-flow-row-dense grid-cols-4 grid-rows-4 content-center">
-			<!-- product ID -->
-			<div class="col-span-2 ml-10 border border-red-500 font-bold">
-				<label class="mb-2 block font-bold text-gray-700" for="id"> ID </label>
-				<input
-					class="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-					id="id"
-					type="text"
-					bind:value={selectedProduct.id}
-				/>
-			</div>
 			<!-- Name -->
 			<div class="col-span-2 ml-10 border border-red-500 font-bold">
 				<label class="mb-2 block font-bold text-gray-700" for="name"> Name </label>
@@ -67,7 +58,7 @@
 					class="focus:shadow-outline w-40% appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
 					id="name"
 					type="text"
-					bind:value={selectedProduct.name}
+					bind:value={createdProduct.name}
 				/>
 			</div>
 			<!-- Brand -->
@@ -77,7 +68,7 @@
 					class="focus:shadow-outline w-40% appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
 					id="brand"
 					type="text"
-					bind:value={selectedProduct.brand}
+					bind:value={createdProduct.brand}
 				/>
 			</div>
 			<!-- Price -->
@@ -87,7 +78,7 @@
 					class="focus:shadow-outline w-40% appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
 					id="price"
 					type="text"
-					bind:value={selectedProduct.price}
+					bind:value={createdProduct.price}
 				/>
 			</div>
 			<!-- Discount Price -->
@@ -97,7 +88,7 @@
 					class="focus:shadow-outline w-40% appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
 					id="name"
 					type="text"
-					bind:value={selectedProduct.discountPrice}
+					bind:value={createdProduct.discountPrice}
 				/>
 			</div>
 			<!-- Preview Image -->
@@ -107,7 +98,7 @@
 					id="imageUrl"
 					rows="2"
 					class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-					bind:value={selectedProduct.imageUrl}
+					bind:value={createdProduct.imageUrl}
 				></textarea>
 			</div>
 			<!-- category -->
@@ -117,7 +108,7 @@
 					class="focus:shadow-outline w-40% appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
 					id="category"
 					type="text"
-					bind:value={selectedProduct.category}
+					bind:value={createdProduct.category}
 				/>
 			</div>
 			<!-- isDiscount -->
@@ -128,7 +119,7 @@
 						type="radio"
 						name="isDiscount"
 						value={true}
-						checked={selectedProduct.isDiscount === true}
+						checked={createdProduct.isDiscount === true}
 						on:change={onChange}
 					/> true
 				</label>
@@ -137,7 +128,7 @@
 						type="radio"
 						name="isDiscount"
 						value={false}
-						checked={selectedProduct.isDiscount === false}
+						checked={createdProduct.isDiscount === false}
 						on:change={onChange}
 					/> false
 				</label>
@@ -156,25 +147,9 @@
 			<div class="col-span-4 mb-1 border border-red-500 text-center font-bold">
 				<button
 					class="focus:shadow-outline rounded bg-blue-500 px-4 py-2 text-center font-bold text-white hover:bg-blue-700 focus:outline-none"
-					on:click={product}>Update</button
+					on:click={product}>Create</button
 				>
 			</div>
 		</div>
 	</div>
 </div>
-
-<!-- <h2 class="mb-4 text-xl font-bold">Update Product</h2>
-		<div class="mb-4">
-			<label class="mb-2 block font-bold text-gray-700" for="name"> Name </label>
-			<input
-				class="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-				id="name"
-				type="text"
-				bind:value={selectedProduct.name}
-			/>
-		</div>
-		Add more input fields for other attributes
-		<button
-			class="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-			on:click={updateProduct}>Update</button
-		> -->
