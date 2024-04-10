@@ -1,7 +1,8 @@
 <!-- Modal.svelte -->
 <script lang="ts">
-	export let createdProduct = {} as productDetail;
+	export let selectedProduct: productDetail;
 	interface productDetail {
+		id: string;
 		brand: string;
 		name: string;
 		category: string;
@@ -10,7 +11,6 @@
 		isDiscount: boolean;
 		imageUrl: string;
 		publishDate: string;
-		reviewIdList: Array<string>;
 		buyCount: number;
 		size: object;
 	}
@@ -22,17 +22,15 @@
 		dispatch('close');
 	}
 
-	function product() {
-		dispatch('product');
+	function updateProduct() {
+		selectedProduct.size = JSON.parse(stockSize);
+		dispatch('updateProduct');
 	}
 
 	function onChange(event: any) {
-		createdProduct.isDiscount = event.currentTarget.value === 'true';
+		selectedProduct.isDiscount = event.currentTarget.value === 'true';
 	}
-	let stockSize: Record<string, number> = {};
-	for (let i = 5.5; i <= 14; i += 0.5) {
-		stockSize[i.toString()] = 0;
-	}
+	let stockSize = JSON.stringify(selectedProduct.size).toString();
 </script>
 
 <div class="bg-rgba(255,104,49,0.6) fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
@@ -49,77 +47,88 @@
 				</svg>
 			</button>
 		</div>
-		<h2 class="mb-4 text-center font-bold">Create Product</h2>
+		<h2 class="mb-4 text-center font-bold">Update Product</h2>
 		<div class="grid grid-flow-row-dense grid-cols-4 grid-rows-4 content-center">
+			<!-- product ID -->
+			<div class="col-span-2 ml-10 font-bold">
+				<label class="mb-2 block font-bold text-gray-700" for="id"> ID </label>
+				<input
+					disabled
+					class="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+					id="id"
+					type="text"
+					bind:value={selectedProduct.id}
+				/>
+			</div>
 			<!-- Name -->
-			<div class="col-span-2 ml-10 border border-red-500 font-bold">
+			<div class="col-span-2 ml-10 font-bold">
 				<label class="mb-2 block font-bold text-gray-700" for="name"> Name </label>
 				<input
-					class="focus:shadow-outline w-40% appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+					class="focus:shadow-outline w-4/5 appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
 					id="name"
 					type="text"
-					bind:value={createdProduct.name}
+					bind:value={selectedProduct.name}
 				/>
 			</div>
 			<!-- Brand -->
-			<div class="col-span-2 ml-10 border border-red-500 font-bold">
+			<div class="col-span-2 ml-10 font-bold">
 				<label class="mb-2 block font-bold text-gray-700" for="brand"> Brand </label>
 				<input
 					class="focus:shadow-outline w-40% appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
 					id="brand"
 					type="text"
-					bind:value={createdProduct.brand}
+					bind:value={selectedProduct.brand}
 				/>
 			</div>
 			<!-- Price -->
-			<div class="col-span-2 ml-10 border border-red-500 font-bold">
+			<div class="col-span-2 ml-10 font-bold">
 				<label class="mb-2 block font-bold text-gray-700" for="price"> Price </label>
 				<input
 					class="focus:shadow-outline w-40% appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
 					id="price"
 					type="text"
-					bind:value={createdProduct.price}
+					bind:value={selectedProduct.price}
 				/>
 			</div>
 			<!-- Discount Price -->
-			<div class="col-span-2 ml-10 border border-red-500 font-bold">
+			<div class="col-span-2 ml-10 font-bold">
 				<label class="mb-2 block font-bold text-gray-700" for="name">Discount Price </label>
 				<input
 					class="focus:shadow-outline w-40% appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
 					id="name"
 					type="text"
-					bind:value={createdProduct.discountPrice}
+					bind:value={selectedProduct.discountPrice}
 				/>
 			</div>
 			<!-- Preview Image -->
-			<div class="col-span-2 ml-10 mr-10 border border-red-500 font-bold">
+			<div class="col-span-2 ml-10 mr-10 font-bold">
 				<label class="mb-2 block font-bold text-gray-700" for="imageUrl"> Preview Image </label>
 				<textarea
 					id="imageUrl"
 					rows="2"
 					class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-					bind:value={createdProduct.imageUrl}
+					bind:value={selectedProduct.imageUrl}
 				></textarea>
 			</div>
 			<!-- category -->
-			<div class="col-span-2 ml-10 border border-red-500 font-bold">
+			<div class="col-span-2 ml-10 font-bold">
 				<label class="mb-2 block font-bold text-gray-700" for="category"> Category </label>
 				<input
 					class="focus:shadow-outline w-40% appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
 					id="category"
 					type="text"
-					bind:value={createdProduct.category}
+					bind:value={selectedProduct.category}
 				/>
 			</div>
 			<!-- isDiscount -->
-			<div class="col-span-2 ml-10 border border-red-500 font-bold">
+			<div class="col-span-2 ml-10 font-bold">
 				<label class="mb-2 block font-bold text-gray-700" for="isDiscount"> isDiscount </label>
 				<label>
 					<input
 						type="radio"
 						name="isDiscount"
 						value={true}
-						checked={createdProduct.isDiscount === true}
+						checked={selectedProduct.isDiscount === true}
 						on:change={onChange}
 					/> true
 				</label>
@@ -128,13 +137,13 @@
 						type="radio"
 						name="isDiscount"
 						value={false}
-						checked={createdProduct.isDiscount === false}
+						checked={selectedProduct.isDiscount === false}
 						on:change={onChange}
 					/> false
 				</label>
 			</div>
 			<!-- Size & Stock -->
-			<div class="col-span-4 ml-10 mr-10 border border-red-500 font-bold">
+			<div class="col-span-4 ml-10 mr-10 font-bold">
 				<label class="mb-2 block font-bold text-gray-700" for="size"> Size & Stock </label>
 				<textarea
 					id="size"
@@ -144,12 +153,28 @@
 				></textarea>
 			</div>
 
-			<div class="col-span-4 mb-1 border border-red-500 text-center font-bold">
+			<div class="col-span-4 mb-1 text-center font-bold">
 				<button
 					class="focus:shadow-outline rounded bg-blue-500 px-4 py-2 text-center font-bold text-white hover:bg-blue-700 focus:outline-none"
-					on:click={product}>Create</button
+					on:click={updateProduct}>Update</button
 				>
 			</div>
 		</div>
 	</div>
 </div>
+
+<!-- <h2 class="mb-4 text-xl font-bold">Update Product</h2>
+		<div class="mb-4">
+			<label class="mb-2 block font-bold text-gray-700" for="name"> Name </label>
+			<input
+				class="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+				id="name"
+				type="text"
+				bind:value={selectedProduct.name}
+			/>
+		</div>
+		Add more input fields for other attributes
+		<button
+			class="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+			on:click={updateProduct}>Update</button
+		> -->
