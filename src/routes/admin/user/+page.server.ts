@@ -5,4 +5,5 @@ export const load = (async ({ cookies }) => {
 	return {
 		jwtToken: jwtToken
 	};
+
 }) satisfies PageServerLoad;
