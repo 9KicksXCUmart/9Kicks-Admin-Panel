@@ -38,7 +38,7 @@
 			});
 
 			const result = await response.json();
-			console.log('result', result);
+			// console.log('result', result);
 			if (response.ok && result.status) {
 				// Close the modal if the creation was successful
 				closeModal();
@@ -47,7 +47,7 @@
 				console.error('Creation failed:', result.message);
 			}
 
-			console.log(result.message);
+			// console.log(result.message);
 		} catch (error) {
 			console.error(error);
 		}

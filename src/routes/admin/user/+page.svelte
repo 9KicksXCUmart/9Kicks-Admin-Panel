@@ -23,21 +23,29 @@
 	let selectedUser = null;
 	let showEditUserModal = false;
 	let lastkey = '';
-	let currentlastkey = '';
-	let futurelastkey = '';
+	let previousLastKey = '';
+	let currentLastKey = '';
+	let futureLastKey = '';
 	let canGoNext = false;
+	let previousKeysStack = [];
 
 	function editUser(user) {
-		console.log(user);
+		// console.log(user);
 		selectedUser = user;
 		showEditUserModal = true;
-		console.log(showEditUserModal);
+		// console.log(showEditUserModal);
 	}
-
-	async function getAllUsers() {
-		const url = lastkey
-			? `${PUBLIC_KOTLIN_BACKEND_URL}api/v1/user-management/users?lastkey=${lastkey}`
-			: `${PUBLIC_KOTLIN_BACKEND_URL}api/v1/user-management/users`;
+	async function getAllUsers(direction = 'next') {
+		let url = `${PUBLIC_KOTLIN_BACKEND_URL}api/v1/user-management/users`;
+		if (direction === 'next' && futureLastKey) {
+			// Navigating forward, use the future last key
+			url += `?lastkey=${futureLastKey}`;
+			previousKeysStack.push(currentLastKey); // Push the current key onto the stack
+		} else if (direction === 'prev' && previousKeysStack.length > 0) {
+			// Navigating backward, pop the last key from the stack
+			let lastKey = previousKeysStack.pop();
+			url += `?lastkey=${lastKey}`;
+		}
 
 		try {
 			const response = await fetch(url, {
@@ -48,26 +56,42 @@
 				}
 			});
 
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
 			const result = await response.json();
 			if (result.data && result.data.length > 0) {
 				users = result.data;
-				lastkey = users[users.length - 1].userId.replace('USER#', '');
-				console.log('keyy', lastkey);
+				currentLastKey = futureLastKey;
+				futureLastKey = users[users.length - 1].userId.replace('USER#', '');
 				canGoNext = result.data && result.data.length === 10; // Assuming 10 is your page size
+			} else {
+				futureLastKey = '';
+				canGoNext = false;
 			}
 			return result.data;
 		} catch (error) {
 			console.error('Failed to fetch users:', error);
-			return []; // Return an empty array in case of error to ensure users is always an array
+			return []; // Return an empty array in case of error
 		}
 	}
+	// function nextPage() {
+	// 	console.log('im');
+	// 	if (canGoNext && users.length > 0) {
+	// 		// lastkey = users[users.length - 1].userId.replace('USER#', '');
+	// 		console.log('keyy', lastkey);
+	// 		console.log('3eee');
+	// 		getAllUsers();
+	// 	}
+	// }
 	function nextPage() {
-		console.log('im');
-		if (canGoNext && users.length > 0) {
-			// lastkey = users[users.length - 1].userId.replace('USER#', '');
-			console.log('keyy', lastkey);
-			console.log('3eee');
-			getAllUsers();
+		getAllUsers('next');
+	}
+
+	function previousPage() {
+		if (previousKeysStack.length > 0) {
+			getAllUsers('prev');
 		}
 	}
 	onMount(async () => {
@@ -83,7 +107,14 @@
 	>
 		+
 	</button>
-	<AddUserModal showModal={showAddUserModal} closeModal={toggleAddUserModal} {data} />
+	<AddUserModal
+		showModal={showAddUserModal}
+		closeModal={() => {
+			toggleAddUserModal();
+			getAllUsers(futureLastKey);
+		}}
+		{data}
+	/>
 </div>
 <table class="w-full table-auto">
 	<thead>
@@ -130,7 +161,7 @@
 				closeModal={() => {
 					showEditUserModal = false;
 					selectedUser = null;
-					getAllUsers();
+					getAllUsers(futureLastKey);
 				}}
 				{data}
 			/>
@@ -138,7 +169,11 @@
 	</tbody>
 </table>
 <div class="mb-4 flex items-center justify-between py-5">
-	<button class="rounded bg-gray-200 px-4 py-2 font-bold text-black hover:bg-gray-500">
+	<button
+		class="rounded bg-gray-200 px-4 py-2 font-bold text-black hover:bg-gray-500"
+		on:click={previousPage}
+		disabled={previousKeysStack.length === 0}
+	>
 		Pre
 	</button>
 	<button

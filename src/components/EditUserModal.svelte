@@ -17,7 +17,7 @@
 	let isVerified = user.isVerified;
 	let message = '';
 	let showMessage = false;
-	console.log(userId);
+	// console.log(userId);
 	// Include a function to submit updated user information
 	async function updateUser() {
 		const userUpdateDTO = {
@@ -50,7 +50,7 @@
 			const result = await response.json();
 
 			// Handle success, possibly update local user state or notify the user
-			console.log('User updated successfully:', result);
+			// console.log('User updated successfully:', result);
 			closeModal(); // Close the modal on success
 		} catch (error) {
 			// Handle errors, possibly notify the user
@@ -84,7 +84,7 @@
 
 			const result = await response.json();
 			orderHistory = result.data; // Make sure the backend is returning the data in this format
-			console.log('orderhistory:', orderHistory);
+			// console.log('orderhistory:', orderHistory);
 		} catch (error) {
 			console.error('Failed to fetch order history:', error);
 		}
@@ -107,7 +107,7 @@
 			}
 
 			// Handle success, possibly updating local state or redirecting
-			console.log('User deleted successfully');
+			// console.log('User deleted successfully');
 			closeModal(); // Close the modal on success
 		} catch (error) {
 			// Handle errors, possibly notify the user
