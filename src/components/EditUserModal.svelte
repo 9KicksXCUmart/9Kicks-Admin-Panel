@@ -34,7 +34,7 @@
 		};
 
 		try {
-			const response = await fetch(`${PUBLIC_KOTLIN_BACKEND_URL}api/v1/user-management/update`, {
+			const response = await fetch(`${PUBLIC_KOTLIN_BACKEND_URL}/api/v1/user-management/update`, {
 				method: 'PATCH', // Or 'PUT', depending on your API method
 				headers: {
 					'Content-Type': 'application/json',
@@ -68,7 +68,7 @@
 	async function getOrderHistory() {
 		try {
 			const response = await fetch(
-				`${PUBLIC_KOTLIN_BACKEND_URL}api/v1/user-management/order/${userId}`,
+				`${PUBLIC_KOTLIN_BACKEND_URL}/api/v1/user-management/order/${userId}`,
 				{
 					method: 'GET',
 					headers: {
@@ -93,7 +93,7 @@
 	async function deleteUser() {
 		try {
 			const response = await fetch(
-				`${PUBLIC_KOTLIN_BACKEND_URL}api/v1/user-management/delete/${userId}`,
+				`${PUBLIC_KOTLIN_BACKEND_URL}/api/v1/user-management/delete/${userId}`,
 				{
 					method: 'DELETE',
 					headers: {

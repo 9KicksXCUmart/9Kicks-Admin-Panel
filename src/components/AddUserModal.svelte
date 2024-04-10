@@ -28,7 +28,7 @@
 		};
 
 		try {
-			const response = await fetch(`${PUBLIC_KOTLIN_BACKEND_URL}api/v1/user-management/create`, {
+			const response = await fetch(`${PUBLIC_KOTLIN_BACKEND_URL}/api/v1/user-management/create`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
