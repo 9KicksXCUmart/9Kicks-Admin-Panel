@@ -36,7 +36,7 @@
 		// console.log(showEditUserModal);
 	}
 	async function getAllUsers(direction = 'next') {
-		let url = `${PUBLIC_KOTLIN_BACKEND_URL}api/v1/user-management/users`;
+		let url = `${PUBLIC_KOTLIN_BACKEND_URL}/api/v1/user-management/users`;
 		if (direction === 'next' && futureLastKey) {
 			// Navigating forward, use the future last key
 			url += `?lastkey=${futureLastKey}`;
