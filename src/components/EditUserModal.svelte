@@ -17,7 +17,6 @@
 	let isVerified = user.isVerified;
 	let message = '';
 	let showMessage = false;
-	let orderHistory = [];
 	console.log(userId);
 	// Include a function to submit updated user information
 	async function updateUser() {
@@ -58,6 +57,14 @@
 			console.error('Failed to update user:', error);
 		}
 	}
+	interface orderHistory {
+		orderNo: string;
+		orderdate: string;
+		deliverStatus: string;
+		totalprice: number;
+	}
+	let orderHistory: orderHistory[] = [];
+
 	async function getOrderHistory() {
 		try {
 			const response = await fetch(
@@ -77,9 +84,34 @@
 
 			const result = await response.json();
 			orderHistory = result.data; // Make sure the backend is returning the data in this format
-			console.log(orderHistory);
+			console.log('orderhistory:', orderHistory);
 		} catch (error) {
 			console.error('Failed to fetch order history:', error);
+		}
+	}
+
+	async function deleteUser() {
+		try {
+			const response = await fetch(
+				`${PUBLIC_KOTLIN_BACKEND_URL}api/v1/user-management/delete/${userId}`,
+				{
+					method: 'DELETE',
+					headers: {
+						Authorization: `Bearer ${data.jwtToken}` // Replace with your method of storing the token
+					}
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			// Handle success, possibly updating local state or redirecting
+			console.log('User deleted successfully');
+			closeModal(); // Close the modal on success
+		} catch (error) {
+			// Handle errors, possibly notify the user
+			console.error('Failed to delete user:', error);
 		}
 	}
 
@@ -196,14 +228,28 @@
 								<th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Order Date</th>
 								<th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Order Status</th>
 								<th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Total Price</th>
-								<th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
 							</tr>
 						</thead>
 						<tbody class="text-sm font-light text-gray-600"> </tbody>
+						{#each orderHistory as order}
+							<tr class="cursor-pointer border-b border-gray-200 hover:bg-gray-100">
+								<td class="px-6 py-3">{order.orderId}</td>
+								<td class="px-6 py-3">{order.orderDate}</td>
+								<td class="px-6 py-3">{order.deliveryStatus}</td>
+								<td class="px-6 py-3">{order.totalPrice}</td>
+							</tr>
+						{/each}
 					</table>
 				</div>
 
 				<div class="flex items-center justify-between">
+					<button
+						class="focus:shadow-outline rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700 focus:outline-none"
+						type="button"
+						on:click={deleteUser}
+					>
+						Delete
+					</button>
 					<button
 						class="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
 						type="submit"

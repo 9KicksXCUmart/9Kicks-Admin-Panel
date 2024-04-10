@@ -23,8 +23,9 @@
 	let selectedUser = null;
 	let showEditUserModal = false;
 	let lastkey = '';
-	let lastUser = '';
-	let canGoNext = true;
+	let currentlastkey = '';
+	let futurelastkey = '';
+	let canGoNext = false;
 
 	function editUser(user) {
 		console.log(user);
@@ -50,15 +51,23 @@
 			const result = await response.json();
 			if (result.data && result.data.length > 0) {
 				users = result.data;
-				lastUser = users[users.length - 1].userId; // Set the lastKey to the last user's ID
-				lastkey = lastUser.replace('USER#', '');
-
+				lastkey = users[users.length - 1].userId.replace('USER#', '');
 				console.log('keyy', lastkey);
+				canGoNext = result.data && result.data.length === 10; // Assuming 10 is your page size
 			}
 			return result.data;
 		} catch (error) {
 			console.error('Failed to fetch users:', error);
 			return []; // Return an empty array in case of error to ensure users is always an array
+		}
+	}
+	function nextPage() {
+		console.log('im');
+		if (canGoNext && users.length > 0) {
+			// lastkey = users[users.length - 1].userId.replace('USER#', '');
+			console.log('keyy', lastkey);
+			console.log('3eee');
+			getAllUsers();
 		}
 	}
 	onMount(async () => {
@@ -84,7 +93,6 @@
 			<th class="px-6 py-3">LastName</th>
 			<th class="px-6 py-3">Shipping Address</th>
 			<th class="px-6 py-3">Status</th>
-			<th class="px-6 py-3">Delete</th>
 		</tr>
 	</thead>
 	<tbody class="text-sm font-light text-gray-600">
@@ -113,11 +121,6 @@
 						<span class="relative">{user.isVerified ? 'active' : 'inactive'}</span>
 					</span>
 				</td>
-				<td class="px-6 py-3">
-					<button class="rounded bg-gray-200 px-4 py-2 font-bold text-black hover:bg-gray-500">
-						-
-					</button>
-				</td>
 			</tr>
 		{/each}
 		{#if showEditUserModal && selectedUser}
@@ -134,3 +137,15 @@
 		{/if}
 	</tbody>
 </table>
+<div class="mb-4 flex items-center justify-between py-5">
+	<button class="rounded bg-gray-200 px-4 py-2 font-bold text-black hover:bg-gray-500">
+		Pre
+	</button>
+	<button
+		class="rounded bg-gray-200 px-4 py-2 font-bold text-black hover:bg-gray-500"
+		on:click={nextPage}
+		disabled={!canGoNext}
+	>
+		Next
+	</button>
+</div>
