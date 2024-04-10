@@ -55,7 +55,7 @@
 </script>
 
 {#if showModal}
-	<div class="modal fixed left-0 top-0 flex h-full w-full items-center justify-center">
+	<div class="modal fixed left-0 top-0 mx-auto flex h-full w-full items-center justify-center">
 		<div
 			class="modal-overlay absolute h-full w-full bg-gray-900 opacity-50"
 			on:click={closeModal}

@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import { PUBLIC_KOTLIN_BACKEND_URL } from '$env/static/public';
 	import AddUserModal from '../../../components/AddUserModal.svelte';
+	import EditUserModal from '../../../components/EditUserModal.svelte';
 	export let data;
 
 	let showAddUserModal = false;
@@ -19,10 +20,26 @@
 		isVerified: boolean;
 	}
 	let users: userInfo[] = [];
+	let selectedUser = null;
+	let showEditUserModal = false;
+	let lastkey = '';
+	let lastUser = '';
+	let canGoNext = true;
+
+	function editUser(user) {
+		console.log(user);
+		selectedUser = user;
+		showEditUserModal = true;
+		console.log(showEditUserModal);
+	}
 
 	async function getAllUsers() {
+		const url = lastkey
+			? `${PUBLIC_KOTLIN_BACKEND_URL}api/v1/user-management/users?lastkey=${lastkey}`
+			: `${PUBLIC_KOTLIN_BACKEND_URL}api/v1/user-management/users`;
+
 		try {
-			const response = await fetch(`${PUBLIC_KOTLIN_BACKEND_URL}api/v1/user-management/users`, {
+			const response = await fetch(url, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
@@ -31,8 +48,13 @@
 			});
 
 			const result = await response.json();
+			if (result.data && result.data.length > 0) {
+				users = result.data;
+				lastUser = users[users.length - 1].userId; // Set the lastKey to the last user's ID
+				lastkey = lastUser.replace('USER#', '');
 
-			// Make sure you are accessing the correct path in your JSON structure
+				console.log('keyy', lastkey);
+			}
 			return result.data;
 		} catch (error) {
 			console.error('Failed to fetch users:', error);
@@ -54,20 +76,23 @@
 	</button>
 	<AddUserModal showModal={showAddUserModal} closeModal={toggleAddUserModal} {data} />
 </div>
-<table class="table-auto">
+<table class="w-full table-auto">
 	<thead>
-		<tr class="bg-gray-200 text-sm leading-normal text-gray-600">
+		<tr class="bg-gray-200 text-left text-sm leading-normal text-gray-600">
 			<th class="px-6 py-3">Email</th>
 			<th class="px-6 py-3">FirstName</th>
 			<th class="px-6 py-3">LastName</th>
 			<th class="px-6 py-3">Shipping Address</th>
 			<th class="px-6 py-3">Status</th>
-			<th class="px-6 py-3">Edit</th>
+			<th class="px-6 py-3">Delete</th>
 		</tr>
 	</thead>
 	<tbody class="text-sm font-light text-gray-600">
 		{#each users as user}
-			<tr class="cursor-pointer border-b border-gray-200 hover:bg-gray-100">
+			<tr
+				class="cursor-pointer border-b border-gray-200 hover:bg-gray-100"
+				on:click={() => editUser(user)}
+			>
 				<td class="px-6 py-3">{user.email}</td>
 				<td class="px-6 py-3">{user.firstName}</td>
 				<td class="px-6 py-3">{user.lastName}</td>
@@ -88,8 +113,24 @@
 						<span class="relative">{user.isVerified ? 'active' : 'inactive'}</span>
 					</span>
 				</td>
-				<td class="px-6 py-3">Edit</td>
+				<td class="px-6 py-3">
+					<button class="rounded bg-gray-200 px-4 py-2 font-bold text-black hover:bg-gray-500">
+						-
+					</button>
+				</td>
 			</tr>
 		{/each}
+		{#if showEditUserModal && selectedUser}
+			<EditUserModal
+				showModal={showEditUserModal}
+				user={selectedUser}
+				closeModal={() => {
+					showEditUserModal = false;
+					selectedUser = null;
+					getAllUsers();
+				}}
+				{data}
+			/>
+		{/if}
 	</tbody>
 </table>
