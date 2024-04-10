@@ -32,7 +32,7 @@
 
 	async function getReviews() {
 		const response = await fetch(
-			`${PUBLIC_GO_BACKEND_URL}/v1/reviews?productId=d0dfc9f3-8dfc-4c26-aa6a-6f81b4a7d52c`,
+			`${PUBLIC_GO_BACKEND_URL}/v1/reviews?productId=${selectedProductReview}`,
 			{
 				method: 'GET',
 				headers: {
