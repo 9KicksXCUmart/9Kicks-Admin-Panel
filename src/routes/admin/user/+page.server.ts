@@ -1,5 +1,9 @@
 import type { PageServerLoad } from './$types';
 
-export const load = (async () => {
-	return {};
+export const load = (async ({ cookies }) => {
+	const jwtToken = cookies.get('jwt');
+	return {
+		jwtToken: jwtToken
+	};
+
 }) satisfies PageServerLoad;
