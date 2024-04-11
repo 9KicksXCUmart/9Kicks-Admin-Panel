@@ -190,7 +190,15 @@
 						</div>
 					</div>
 				</div>
-
+				<div class="mb-4 flex items-center">
+					<input
+						id="isVerified"
+						type="checkbox"
+						bind:checked={isVerified}
+						class="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+					/>
+					<label for="isVerified" class="text-sm font-medium text-gray-700">Is Verified</label>
+				</div>
 				<div class="mb-6">
 					<h3 class="mb-2 text-xl">Shipping Info</h3>
 					<div class="mb-4">
