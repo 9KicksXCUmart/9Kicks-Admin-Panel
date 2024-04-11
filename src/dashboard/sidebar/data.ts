@@ -24,7 +24,7 @@ export const data = [
 			{
 				title: 'Product Management',
 				icon: TasksIcon,
-				link: '/admin/product'
+				link: '/admin/product1'
 			}
 		]
 	}
