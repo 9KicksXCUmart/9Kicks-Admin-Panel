@@ -9,7 +9,7 @@
 	import ViewButton from '../../../components/button/ViewButton.svelte';
 	import EditButton from '../../../components/button/EditButton.svelte';
 	import AddButton from '../../../components/button/AddButton.svelte';
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 
 	let selectedProduct: productDetail | null = null;
 	let selectedProductReview: string | null = null;
@@ -94,6 +94,16 @@
 			body: formData
 		});
 	}
+
+	async function handleDelete(productId: string) {
+		const response = await fetch(`${PUBLIC_GO_BACKEND_URL}/v1/products/` + productId, {
+			method: 'DELETE',
+			headers: {
+				Authorization: `Bearer ${data.jwtToken}`
+			}
+		});
+		invalidateAll();
+	}
 </script>
 
 <svelte:head>
@@ -117,6 +127,7 @@
 			<th class="border px-6 py-3">Preview Image</th>
 			<th class="border px-6 py-3">Review</th>
 			<th class="border px-6 py-3">Edit</th>
+			<th class="border px-6 py-3">Delete</th>
 		</tr>
 	</thead>
 	<tbody class="text-sm font-light text-gray-600">
@@ -136,6 +147,13 @@
 					<td class=" max-w-80 break-words px-6 py-3">{product.imageUrl}</td>
 					<td class=" px-6 py-3"><ViewButton on:click={() => openReviewModal(product.id)} /></td>
 					<td class=" px-6 py-3"><EditButton on:click={() => openProductModal(product)} /></td>
+					<td class=" px-6 py-3"
+						><button
+							on:click={() => {
+								handleDelete(product.id);
+							}}>Delete</button
+						></td
+					>
 				</tr>
 			{/each}
 		{/if}
