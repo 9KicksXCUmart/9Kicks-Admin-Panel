@@ -11,10 +11,9 @@ Implemented features:
 - [x] Delete user
 - [x] Get all products infomation and list all products
 - [x] Publish product
-- [x] Update product data 
+- [x] Update product data
 - [x] Update stock
 - [x] Deleted product
-
 
 ## Prerequisites
 

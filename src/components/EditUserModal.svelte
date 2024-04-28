@@ -9,7 +9,7 @@
 	let userId = user.userId.replace('USER#', '');
 
 	let email = user.email;
-	let password = user.password; 
+	let password = user.password;
 	let firstName = user.firstName;
 	let lastName = user.lastName;
 	let streetAddress = user.shippingAddress.streetAddress;
@@ -18,24 +18,24 @@
 	// Include a function to submit updated user information
 	async function updateUser() {
 		const userUpdateDTO = {
-			userId: userId, 
-			email: email, 
-			password: password, 
-			firstName: firstName, 
-			lastName: lastName, 
+			userId: userId,
+			email: email,
+			password: password,
+			firstName: firstName,
+			lastName: lastName,
 			shippingAddress: {
-				streetAddress: streetAddress, 
-				district: district 
+				streetAddress: streetAddress,
+				district: district
 			},
-			isVerified: isVerified 
+			isVerified: isVerified
 		};
 
 		try {
 			const response = await fetch(`${PUBLIC_KOTLIN_BACKEND_URL}/api/v1/user-management/update`, {
-				method: 'PATCH', 
+				method: 'PATCH',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${data.jwtToken}` 
+					Authorization: `Bearer ${data.jwtToken}`
 				},
 				body: JSON.stringify(userUpdateDTO)
 			});
@@ -59,7 +59,8 @@
 	}
 	let orderHistory: orderHistory[] = [];
 
-	async function getOrderHistory() {            //get the order history of the user
+	async function getOrderHistory() {
+		//get the order history of the user
 		try {
 			const response = await fetch(
 				`${PUBLIC_KOTLIN_BACKEND_URL}/api/v1/user-management/order/${userId}`,
@@ -67,7 +68,7 @@
 					method: 'GET',
 					headers: {
 						'Content-Type': 'application/json',
-						Authorization: `Bearer ${data.jwtToken}` 
+						Authorization: `Bearer ${data.jwtToken}`
 					}
 				}
 			);
@@ -77,20 +78,21 @@
 			}
 
 			const result = await response.json();
-			orderHistory = result.data; 
+			orderHistory = result.data;
 		} catch (error) {
 			console.error('Failed to fetch order history:', error);
 		}
 	}
 
-	async function deleteUser() {  //delete the user via DELETE
+	async function deleteUser() {
+		//delete the user via DELETE
 		try {
 			const response = await fetch(
 				`${PUBLIC_KOTLIN_BACKEND_URL}/api/v1/user-management/delete/${userId}`,
 				{
 					method: 'DELETE',
 					headers: {
-						Authorization: `Bearer ${data.jwtToken}` 
+						Authorization: `Bearer ${data.jwtToken}`
 					}
 				}
 			);
@@ -190,7 +192,7 @@
 					/>
 					<label for="isVerified" class="text-sm font-medium text-gray-700">Is Verified</label>
 				</div>
-        
+
 				<div class="mb-6">
 					<h3 class="mb-2 text-xl">Shipping Info</h3>
 					<div class="mb-4">
@@ -260,12 +262,11 @@
 			</form>
 		</div>
 	</div>
-
 {/if}
 
 <style>
 	.modal-container {
-		width: 75%; 
-		max-width: 900px; 
+		width: 75%;
+		max-width: 900px;
 	}
 </style>

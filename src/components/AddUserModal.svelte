@@ -14,7 +14,8 @@
 	let district = '';
 	let isVerified = false;
 
-	async function createUser() {   //create a new user via POST
+	async function createUser() {
+		//create a new user via POST
 		const newUser = {
 			email,
 			password,
@@ -44,7 +45,6 @@
 			} else {
 				console.error('Creation failed:', result.message);
 			}
-
 		} catch (error) {
 			console.error(error);
 		}

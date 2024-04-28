@@ -13,29 +13,31 @@
 		size: object;
 	}
 	import { createEventDispatcher } from 'svelte';
-
+	// dispatch event
 	const productDispatch = createEventDispatcher<{
 		createProduct: { files: FileList; createdProduct: productDetail };
 	}>();
 	const dispatch = createEventDispatcher();
-
+	// close add product menu
 	function closeModal() {
 		dispatch('close');
 	}
-
+	// dispatch createProduct event for page.svelte to call backend with createdProduct details and image
 	function createProduct() {
 		createdProduct.size = JSON.parse(stockSize);
 		productDispatch('createProduct', { files, createdProduct });
 	}
-
+	// set isDisounted value
 	function onChange(event: any) {
 		createdProduct.isDiscount = event.currentTarget.value === 'true';
 	}
+	// set init value of product size map
 	let initSize: Record<string, number> = {};
 	for (let i = 5.5; i <= 14; i += 0.5) {
 		initSize[i.toFixed(1).toString()] = 0;
 	}
 	let stockSize = JSON.stringify(initSize);
+	// set discountPrice = 0 if no discount
 	$: if (createdProduct.isDiscount === false) {
 		createdProduct.discountPrice = 0;
 	}

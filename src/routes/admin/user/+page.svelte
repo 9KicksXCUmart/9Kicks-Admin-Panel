@@ -7,7 +7,8 @@
 	export let data;
 
 	let showAddUserModal = false;
-	function toggleAddUserModal() {     //toggle the popup add user menu
+	function toggleAddUserModal() {
+		//toggle the popup add user menu
 		showAddUserModal = !showAddUserModal;
 	}
 	interface userInfo {
@@ -33,7 +34,8 @@
 		showEditUserModal = true;
 		// console.log(showEditUserModal);
 	}
-	async function getAllUsers(direction = 'next') {              // get all user from Dynamobd and listed in the table
+	async function getAllUsers(direction = 'next') {
+		// get all user from Dynamobd and listed in the table
 		let url = `${PUBLIC_KOTLIN_BACKEND_URL}/api/v1/user-management/users`;
 		if (direction === 'next' && futureLastKey) {
 			// Navigating forward, use the future last key
@@ -75,7 +77,7 @@
 		}
 	}
 
-	function nextPage() {    
+	function nextPage() {
 		getAllUsers('next');
 	}
 

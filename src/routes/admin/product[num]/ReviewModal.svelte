@@ -19,17 +19,13 @@
 	import { onMount } from 'svelte';
 	import { PUBLIC_GO_BACKEND_URL } from '$env/static/public';
 	import DeleteButton from '../../../components/button/DeleteButton.svelte';
-
+	// dispatch event
 	const dispatch = createEventDispatcher();
-
+	// close edit review menu
 	function closeModal() {
 		dispatch('close');
 	}
-
-	function updateProduct() {
-		dispatch('updateProduct');
-	}
-
+	// get product review from backend
 	async function getReviews() {
 		const response = await fetch(
 			`${PUBLIC_GO_BACKEND_URL}/v1/reviews?productId=${selectedProductReview}`,
@@ -49,7 +45,7 @@
 			return {};
 		}
 	}
-
+	//schedules a callback to run as soon as the component has been mounted to the DOM
 	onMount(async () => {
 		console.log(selectedProductReview);
 		reviews = await getReviews();

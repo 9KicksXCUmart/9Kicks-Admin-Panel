@@ -15,21 +15,22 @@
 		size: object;
 	}
 	import { createEventDispatcher } from 'svelte';
-
+	// dispatch event
 	const dispatch = createEventDispatcher();
-
+	// close edit product menu
 	function closeModal() {
 		dispatch('close');
 	}
-
+	// dispatch updateProduct event for page.svelte to call backend with updateProduct details
 	function updateProduct() {
 		selectedProduct.size = JSON.parse(stockSize);
 		dispatch('updateProduct');
 	}
-
+	// set isDisounted value
 	function onChange(event: any) {
 		selectedProduct.isDiscount = event.currentTarget.value === 'true';
 	}
+	// display product size map in JSON format
 	let stockSize = JSON.stringify(selectedProduct.size).toString();
 </script>
 

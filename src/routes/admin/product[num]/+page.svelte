@@ -13,6 +13,7 @@
 
 	let selectedProduct: productDetail | null = null;
 	let selectedProductReview: string | null = null;
+	// for pagination routing
 	let currentPage = Number($page.params.num);
 	interface data {
 		products: [
@@ -34,37 +35,39 @@
 	}
 	let products = data.products;
 	let add = false;
-
+	// toggle  the popup add product menu
 	function addPoductModal() {
 		add = true;
 	}
-
+	// toggle the popup edit product menu
 	function openProductModal(product: productDetail) {
 		selectedProduct = { ...product };
 	}
-
+	// toggle the popup review menu
 	function openReviewModal(id: string) {
 		selectedProductReview = id;
 	}
-
+	// trigger the page of products listing re-render and currentPage is not same with the params
 	$: if (currentPage !== Number($page.params.num)) {
 		goto('/admin/product' + currentPage);
 		products = data.products;
 	}
-
+	// back to previous page
 	function goBack() {
 		if (currentPage > 1) {
 			currentPage = currentPage - 1;
 		}
 	}
-
+	// go to next page
 	function goFront() {
 		currentPage = currentPage + 1;
 	}
-
+	// post update product request
 	async function updateProduct() {
 		if (selectedProduct) {
+			// find whether the product exist or not
 			const index = products.findIndex((p) => p.id === selectedProduct!!.id);
+			// if exist set request body for product that need updated
 			if (index !== -1) {
 				products[index] = { ...selectedProduct };
 			}
@@ -80,8 +83,9 @@
 		}
 		selectedProduct = null;
 	}
-
+	// post create product request
 	async function createProduct(event: any) {
+		// set request body
 		const formData = new FormData();
 		formData.append('image', event.detail.files[0]);
 		let info: string = JSON.stringify(event.detail.createdProduct);
@@ -94,7 +98,7 @@
 			body: formData
 		});
 	}
-
+	// Delete product request
 	async function handleDelete(productId: string) {
 		const response = await fetch(`${PUBLIC_GO_BACKEND_URL}/v1/products/` + productId, {
 			method: 'DELETE',
@@ -102,6 +106,7 @@
 				Authorization: `Bearer ${data.jwtToken}`
 			}
 		});
+		// call all api in this page for re-rendering
 		invalidateAll();
 	}
 </script>
@@ -130,6 +135,7 @@
 			<th class="border px-6 py-3">Delete</th>
 		</tr>
 	</thead>
+	<!-- show product details -->
 	<tbody class="text-sm font-light text-gray-600">
 		{#if data.products !== null}
 			{#each products as product}
@@ -159,7 +165,7 @@
 		{/if}
 	</tbody>
 </table>
-
+<!-- show product edit menu if admin click product edit button-->
 {#if selectedProduct}
 	<Modal
 		{selectedProduct}
@@ -167,11 +173,11 @@
 		on:updateProduct={updateProduct}
 	/>
 {/if}
-
+<!-- show product add menu if admin click add button-->
 {#if add}
 	<AddModal on:close={() => (add = false)} on:createProduct={createProduct} />
 {/if}
-
+<!-- show product add menu if admin click product review edit button-->
 {#if selectedProductReview}
 	<ReviewModal
 		{selectedProductReview}
