@@ -11,7 +11,6 @@
 		<div
 			class="modal-container z-50 mx-auto w-11/12 overflow-y-auto rounded bg-white shadow-lg md:max-w-md"
 		>
-			<!-- Add margin if you want to see some of the overlay behind the modal-->
 			<div class="modal-content px-6 py-4 text-left">
 				<!--Title-->
 				<div class="flex items-center justify-between pb-3">

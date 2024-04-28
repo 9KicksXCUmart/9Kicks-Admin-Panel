@@ -9,36 +9,33 @@
 	let userId = user.userId.replace('USER#', '');
 
 	let email = user.email;
-	let password = user.password; // Usually not pre-filled for security reasons
+	let password = user.password; 
 	let firstName = user.firstName;
 	let lastName = user.lastName;
 	let streetAddress = user.shippingAddress.streetAddress;
 	let district = user.shippingAddress.district;
 	let isVerified = user.isVerified;
-	let message = '';
-	let showMessage = false;
-	// console.log(userId);
 	// Include a function to submit updated user information
 	async function updateUser() {
 		const userUpdateDTO = {
-			userId: userId, // Assuming 'user' is a prop passed to the component
-			email: email, // Bound to your form input
-			password: password, // Bound to your form input
-			firstName: firstName, // Bound to your form input
-			lastName: lastName, // Bound to your form input
+			userId: userId, 
+			email: email, 
+			password: password, 
+			firstName: firstName, 
+			lastName: lastName, 
 			shippingAddress: {
-				streetAddress: streetAddress, // Bound to your form input
-				district: district // Bound to your form input
+				streetAddress: streetAddress, 
+				district: district 
 			},
-			isVerified: isVerified // Bound to your form input or a state
+			isVerified: isVerified 
 		};
 
 		try {
 			const response = await fetch(`${PUBLIC_KOTLIN_BACKEND_URL}/api/v1/user-management/update`, {
-				method: 'PATCH', // Or 'PUT', depending on your API method
+				method: 'PATCH', 
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${data.jwtToken}` // Replace with your method of storing the token
+					Authorization: `Bearer ${data.jwtToken}` 
 				},
 				body: JSON.stringify(userUpdateDTO)
 			});
@@ -49,11 +46,8 @@
 
 			const result = await response.json();
 
-			// Handle success, possibly update local user state or notify the user
-			// console.log('User updated successfully:', result);
 			closeModal(); // Close the modal on success
 		} catch (error) {
-			// Handle errors, possibly notify the user
 			console.error('Failed to update user:', error);
 		}
 	}
@@ -65,7 +59,7 @@
 	}
 	let orderHistory: orderHistory[] = [];
 
-	async function getOrderHistory() {
+	async function getOrderHistory() {            //get the order history of the user
 		try {
 			const response = await fetch(
 				`${PUBLIC_KOTLIN_BACKEND_URL}/api/v1/user-management/order/${userId}`,
@@ -73,7 +67,7 @@
 					method: 'GET',
 					headers: {
 						'Content-Type': 'application/json',
-						Authorization: `Bearer ${data.jwtToken}` // Ensure the JWT token is passed here
+						Authorization: `Bearer ${data.jwtToken}` 
 					}
 				}
 			);
@@ -83,21 +77,20 @@
 			}
 
 			const result = await response.json();
-			orderHistory = result.data; // Make sure the backend is returning the data in this format
-			// console.log('orderhistory:', orderHistory);
+			orderHistory = result.data; 
 		} catch (error) {
 			console.error('Failed to fetch order history:', error);
 		}
 	}
 
-	async function deleteUser() {
+	async function deleteUser() {  //delete the user via DELETE
 		try {
 			const response = await fetch(
 				`${PUBLIC_KOTLIN_BACKEND_URL}/api/v1/user-management/delete/${userId}`,
 				{
 					method: 'DELETE',
 					headers: {
-						Authorization: `Bearer ${data.jwtToken}` // Replace with your method of storing the token
+						Authorization: `Bearer ${data.jwtToken}` 
 					}
 				}
 			);
@@ -106,11 +99,8 @@
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 
-			// Handle success, possibly updating local state or redirecting
-			// console.log('User deleted successfully');
 			closeModal(); // Close the modal on success
 		} catch (error) {
-			// Handle errors, possibly notify the user
 			console.error('Failed to delete user:', error);
 		}
 	}
@@ -271,13 +261,11 @@
 		</div>
 	</div>
 
-	<!-- ... -->
 {/if}
 
 <style>
 	.modal-container {
-		width: 75%; /* Or any other value */
-		max-width: 900px; /* Or any other value */
-		/* Other styles */
+		width: 75%; 
+		max-width: 900px; 
 	}
 </style>

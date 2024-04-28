@@ -14,7 +14,7 @@
 	let district = '';
 	let isVerified = false;
 
-	async function createUser() {
+	async function createUser() {   //create a new user via POST
 		const newUser = {
 			email,
 			password,
@@ -38,16 +38,13 @@
 			});
 
 			const result = await response.json();
-			// console.log('result', result);
 			if (response.ok && result.status) {
 				// Close the modal if the creation was successful
 				closeModal();
 			} else {
-				// Handle any cases where the API response was not ok
 				console.error('Creation failed:', result.message);
 			}
 
-			// console.log(result.message);
 		} catch (error) {
 			console.error(error);
 		}
@@ -64,7 +61,6 @@
 		<div
 			class="modal-container z-50 mx-auto w-11/12 overflow-y-auto rounded bg-white shadow-lg md:max-w-md"
 		>
-			<!-- Add margin if you want to see some of the overlay behind the modal-->
 			<div class="modal-content px-6 py-4 text-left">
 				<!--Title-->
 				<div class="flex items-center justify-between pb-3">
@@ -125,7 +121,7 @@
 								class="text-grey-darker w-full appearance-none rounded border px-3 py-2 shadow"
 							/>
 						</div>
-						<!-- ... other input fields ... -->
+
 						<div class="mb-4">
 							<label for="streetAddress" class="text-grey-darker mb-2 block text-sm font-bold"
 								>Street Address*</label
@@ -156,7 +152,6 @@
 						>
 							Submit
 						</button>
-						<!-- ... submit button ... -->
 					</form>
 				</div>
 			</div>

@@ -7,23 +7,21 @@
 	export let data;
 
 	let showAddUserModal = false;
-	function toggleAddUserModal() {
+	function toggleAddUserModal() {     //toggle the popup add user menu
 		showAddUserModal = !showAddUserModal;
 	}
 	interface userInfo {
 		id: string;
 		email: string;
 		password: string;
-		firstname: string;
-		lastname: string;
-		shippingaddress: string[];
+		firstName: string;
+		lastName: string;
+		shippingAddress: string[];
 		isVerified: boolean;
 	}
 	let users: userInfo[] = [];
 	let selectedUser = null;
 	let showEditUserModal = false;
-	let lastkey = '';
-	let previousLastKey = '';
 	let currentLastKey = '';
 	let futureLastKey = '';
 	let canGoNext = false;
@@ -35,7 +33,7 @@
 		showEditUserModal = true;
 		// console.log(showEditUserModal);
 	}
-	async function getAllUsers(direction = 'next') {
+	async function getAllUsers(direction = 'next') {              // get all user from Dynamobd and listed in the table
 		let url = `${PUBLIC_KOTLIN_BACKEND_URL}/api/v1/user-management/users`;
 		if (direction === 'next' && futureLastKey) {
 			// Navigating forward, use the future last key
@@ -65,7 +63,7 @@
 				users = result.data;
 				currentLastKey = futureLastKey;
 				futureLastKey = users[users.length - 1].userId.replace('USER#', '');
-				canGoNext = result.data && result.data.length === 10; // Assuming 10 is your page size
+				canGoNext = result.data && result.data.length === 10; // Assuming 10 the page size
 			} else {
 				futureLastKey = '';
 				canGoNext = false;
@@ -76,16 +74,8 @@
 			return []; // Return an empty array in case of error
 		}
 	}
-	// function nextPage() {
-	// 	console.log('im');
-	// 	if (canGoNext && users.length > 0) {
-	// 		// lastkey = users[users.length - 1].userId.replace('USER#', '');
-	// 		console.log('keyy', lastkey);
-	// 		console.log('3eee');
-	// 		getAllUsers();
-	// 	}
-	// }
-	function nextPage() {
+
+	function nextPage() {    
 		getAllUsers('next');
 	}
 
