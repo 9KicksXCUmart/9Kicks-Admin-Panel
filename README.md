@@ -1,38 +1,52 @@
-# create-svelte
+# 9Kicks Shop
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+This the Frontend of Online Shopping for the 9Kicks project. It is written in `Svelte` and `TypeScript` and uses the `SvelteKit` framework.
 
-## Creating a project
+Implemented features:
 
-If you're seeing this, you've probably already done this step. Congrats!
+- [x] Get all users infomation and list all users
+- [x] Get order history for each users
+- [x] Create user
+- [x] Update user data
+- [x] Delete user
+- [x] Get all products infomation and list all products
+- [x] Publish product
+- [x] Update product data 
+- [x] Update stock
+- [x] Deleted product
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+## Prerequisites
 
-## Developing
+- AWS account
+- AWS DynamoDB
+- Running Microservices Go (Backend) and Microservices Kotlin (Backend) locally or remotely
+- node.js
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
+## Getting Started
 
 ```bash
-npm run build
+cp .env.example .env
 ```
 
-You can preview the production build with `npm run preview`.
+Input your credentials in the `.env` file.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+```bash
+STRIPE_SECRET_KEY=<YOUR-STRIPE-SECRET-KEY>
+PUBLIC_STRIPE_KEY=<YOUR-PUBLIC-STRIPE-KEY>
+PUBLIC_KOTLIN_BACKEND_URL=<BACKEND-KOTLIN-URL-HOST>
+PUBLIC_GO_BACKEND_URL=<BACKEND-GO-URL-HOST>
+```
+
+Run development server :
+
+```bash
+git clone git@github.com:9KicksXCUmart/9Kicks-Admin-Panel.git
+cd 9Kicks-Admin-Panel
+
+npm i pnpm
+make setup
+
+# Start the development server
+make run
+```
